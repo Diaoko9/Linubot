@@ -1,0 +1,47 @@
+name: linubot
+version: '1.0'
+summary: L293 motor controller for linuBot
+description: ROS 2 Jazzy controller for differential drive using L293 motor driver.
+
+confinement: strict
+base: core24
+
+platforms:
+  arm64:
+    build-on: [arm64]
+    build-for: [arm64]
+
+apps:
+  linubot:
+    command: ros2 launch linubot linubot.launch.py
+    extensions: [ros2-jazzy]
+    daemon: simple
+    environment:
+      PYTHONPATH: $SNAP/opt/ros/snap/lib/python3.12/site-packages:$SNAP/usr/lib/python3/dist-packages:$PYTHONPATH
+      AMENT_PREFIX_PATH: $SNAP/opt/ros/snap:$AMENT_PREFIX_PATH
+      LD_LIBRARY_PATH: $SNAP/usr/lib/aarch64-linux-gnu/pulseaudio:$SNAP/usr/lib/aarch64-linux-gnu/blas:$SNAP/usr/lib/aarch64-linux-gnu/lapack:$LD_LIBRARY_PATH
+      SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS: "1"
+    plugs:
+      - network
+      - network-bind
+      - gpio
+      - joystick
+
+parts:
+  workspace:
+    plugin: colcon
+    source: .
+    stage-packages:
+      - ros-jazzy-ros-core
+      - ros-jazzy-rclpy
+      - python3-gpiozero
+      - ros-jazzy-ros2run
+      - python3-argcomplete
+      - python3-packaging
+      - libblas3
+      - liblapack3
+      - python3-lgpio
+      - python3-rpi.gpio
+      - ros-jazzy-joy
+      - ros-jazzy-launch-ros
+      - libpulse0
